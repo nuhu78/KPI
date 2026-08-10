@@ -20,8 +20,9 @@
 - Numeric bounds enforced (target_files > 0, reasonable max) to prevent nonsense data
 
 ## 5. SQL Injection
-- No ORM in v1 — all raw queries **must** use parameterized queries (`$1, $2...` with `pg`), never string-concatenated SQL
-- Code review checklist item: reject any PR with string-built SQL
+- TypeORM handles parameterization automatically — no raw SQL needed
+- If using query builder, always use parameterized queries
+- Code review checklist: reject any raw SQL with string concatenation
 
 ## 6. Rate Limiting
 - Apply `@nestjs/throttler` on both login endpoints (e.g. 5 attempts/min per IP) to slow brute-force attempts against the small employee/admin credential space
@@ -45,7 +46,7 @@
 ## 11. File Upload Security
 - Only allow safe image types: jpg, jpeg, png (validate MIME type + extension)
 - Max file size: 2MB (enforce in multer config)
-- Store uploads outside web root if possible, or in `/uploads/` with static serving
+- Store uploads in `backend/src/uploads/` with static serving
 - Never execute or serve uploaded files as scripts
 - Sanitize filenames (remove special chars, use UUID if needed)
 

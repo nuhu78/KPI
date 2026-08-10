@@ -20,13 +20,15 @@ Class project: employee KPI ranking system. NestJS REST API + React frontend + P
 
 ## Architecture Facts That Matter
 
-- **No ORM** — raw `pg` (node-postgres) queries, parameterized only (`$1, $2...`). Reject string-concatenated SQL.
+- **Monorepo** — `backend/` (NestJS) + `frontend/` (React Vite) in one repo
+- **TypeORM** — entities define schema, `synchronize: true` in dev auto-creates tables
+- **Auto-create tables** — tables created on `npm run start:dev` from entity definitions. No manual migration step.
 - **Two JWT roles:** `admin` and `employee`. Guards: `AdminGuard`, `EmployeeGuard`.
 - **Public dashboard routes have no auth** — read-only aggregate data only.
 - **One active cycle per employee** — enforced in service layer, not DB constraint.
 - **Scoring formula:** `(completed_files / target_files) * 100`. Section score = avg of employee scores.
 - **Admin is seeded** — single row from `ADMIN_SEED_ID` / `ADMIN_SEED_PASSWORD` env vars.
-- **Employee images** — stored in `/uploads/` folder, served as static files, path saved in `image_url` column.
+- **Employee images** — stored in `backend/src/uploads/` folder, served as static files, path saved in `image_url` column.
 
 ## Env Vars Required
 
@@ -35,8 +37,8 @@ Class project: employee KPI ranking system. NestJS REST API + React frontend + P
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=postgres
-DB_PASSWORD=your_password
-DB_DATABASE=kpi_db
+DB_PASSWORD=123
+DB_DATABASE=
 ```
 
 ### Production (Render)
@@ -65,5 +67,6 @@ Phases 0→7 in `Phase.md` are sequential dependencies. Each phase is a demoable
 - Passwords: bcrypt cost factor 10–12, min 8 chars
 - CORS restricted to Vercel frontend origin only
 - Rate limit login endpoints (`@nestjs/throttler`, ~5 attempts/min per IP)
-- Employee images: multer for upload, validate file type (jpg/jpeg/png), max 2MB, store in `/uploads/`
+- Employee images: multer for upload, validate file type (jpg/jpeg/png), max 2MB, store in `backend/src/uploads/`
 - Deploy: Render (backend + DB), Vercel (frontend). Auto-deploy from GitHub main.
+- Folder structure: `backend/` (NestJS + TypeORM) + `frontend/` (React Vite) in monorepo.

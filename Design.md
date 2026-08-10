@@ -56,3 +56,5 @@ Public Dashboard ──▶ Login ──▶ (role) ──▶ Admin Panel
 ## 5. Notes
 - Keep the public dashboard unauthenticated and cache-friendly (short polling or manual refresh is fine for v1 — no need for websockets)
 - Admin and employee panels can share a base authenticated layout (top bar + role-based nav) to avoid duplicating structure
+- Frontend lives in `frontend/` folder, backend API in `backend/` folder — monorepo structure
+- TypeORM entities in `backend/src/entities/` define the database schema

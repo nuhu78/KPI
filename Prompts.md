@@ -4,17 +4,25 @@ Use one prompt per phase, in order. Paste `Architecture.md`, `Database.md`, `Err
 
 ## Phase 0 — Setup
 ```
-Set up a new NestJS + TypeScript project called kpi-system. Connect it to
-PostgreSQL using plain pg (node-postgres), no ORM. Add @nestjs/config with
-validated env vars. For local dev (pgAdmin4), use individual vars:
-DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE. For production
-(Render), use DATABASE_URL. The app should detect which mode: if DATABASE_URL
-exists use it, otherwise build the connection from DB_* vars. Also add
-JWT_SECRET, JWT_EXPIRES_IN, ADMIN_SEED_ID, ADMIN_SEED_PASSWORD. Create a
-migrations/ folder with numbered .sql files for the schema in Database.md
-(admins, sections, employees, cycles tables plus indexes). Add a seed script
-that inserts the admin row from ADMIN_SEED_ID / ADMIN_SEED_PASSWORD (hashed
-with bcrypt) if it doesn't already exist.
+Create a monorepo called kpi-system with two folders: backend/ and frontend/.
+
+In backend/: Set up a new NestJS + TypeScript project. Connect it to
+PostgreSQL using TypeORM. Add @nestjs/config with validated env vars.
+For local dev (pgAdmin4), use individual vars: DB_HOST, DB_PORT,
+DB_USERNAME, DB_PASSWORD, DB_DATABASE. For production (Render), use
+DATABASE_URL. The app should detect which mode: if DATABASE_URL exists
+use it, otherwise build the connection from DB_* vars. Also add
+JWT_SECRET, JWT_EXPIRES_IN, ADMIN_SEED_ID, ADMIN_SEED_PASSWORD.
+Configure TypeORM with synchronize: true for dev. Create entity classes
+for: Admin, Section, Employee, Cycle — matching the schema in Database.md.
+On startup (npm run start:dev), TypeORM auto-creates/updates tables from
+entities. Seed the admin row from ADMIN_SEED_ID / ADMIN_SEED_PASSWORD
+(hashed with bcrypt) if it doesn't already exist. Add an /uploads/
+folder for employee images.
+
+In frontend/: Set up a new React + Vite project with JavaScript. Install
+axios for API calls. Create a basic App.jsx that renders "KPI System" on
+the home page.
 ```
 
 ## Phase 1 — Admin Auth

@@ -28,27 +28,71 @@ Monolithic REST API (NestJS) + separate React frontend. No microservices — not
 
 ## 4. Folder Structure
 ```
-src/
-  auth/
-    auth.module.ts
-    auth.service.ts
-    auth.controller.ts
-    guards/
-      admin.guard.ts
-      employee.guard.ts
-    strategies/
-      jwt.strategy.ts
-  admin/
-  section/
-  employee/
-  cycle/
-  dashboard/
-  common/
-    filters/
-    dto/
-    decorators/
-  main.ts
-  app.module.ts
+kpi-system/
+├── backend/
+│   ├── src/
+│   │   ├── auth/
+│   │   │   ├── auth.module.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.controller.ts
+│   │   │   ├── guards/
+│   │   │   │   ├── admin.guard.ts
+│   │   │   │   └── employee.guard.ts
+│   │   │   └── strategies/
+│   │   │       └── jwt.strategy.ts
+│   │   ├── admin/
+│   │   ├── section/
+│   │   ├── employee/
+│   │   ├── cycle/
+│   │   ├── dashboard/
+│   │   ├── common/
+│   │   │   ├── filters/
+│   │   │   ├── dto/
+│   │   │   └── decorators/
+│   │   ├── entities/
+│   │   │   ├── admin.entity.ts
+│   │   │   ├── section.entity.ts
+│   │   │   ├── employee.entity.ts
+│   │   │   └── cycle.entity.ts
+│   │   ├── uploads/
+│   │   ├── main.ts
+│   │   └── app.module.ts
+│   ├── .env
+│   ├── package.json
+│   └── tsconfig.json
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── RankingTable.jsx
+│   │   │   ├── SectionAccordion.jsx
+│   │   │   ├── ProgressBar.jsx
+│   │   │   ├── LoginForm.jsx
+│   │   │   ├── RegisterForm.jsx
+│   │   │   ├── AdminSectionManager.jsx
+│   │   │   ├── AdminEmployeeManager.jsx
+│   │   │   ├── AdminCycleAssigner.jsx
+│   │   │   ├── EmployeeCycleCard.jsx
+│   │   │   ├── EmployeeHistoryTable.jsx
+│   │   │   └── PhotoUpload.jsx
+│   │   ├── pages/
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── admin/
+│   │   │   │   ├── Sections.jsx
+│   │   │   │   ├── Employees.jsx
+│   │   │   │   └── Cycles.jsx
+│   │   │   └── employee/
+│   │   │       └── MyCycle.jsx
+│   │   ├── api/
+│   │   │   └── client.js
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── .env
+│   ├── package.json
+│   └── vite.config.js
+├── .gitignore
+└── README.md
 ```
 
 ## 5. Request Flow (example: employee marks a file complete)
@@ -62,7 +106,7 @@ src/
 ## 6. API Layering
 - **Controller** — routing, request validation (DTOs + `class-validator`), calls service
 - **Service** — business logic (scoring math, cycle rules, registration matching)
-- **Repository/Query layer** — raw `pg` queries or query builder (no ORM in v1 — see Database.md)
+- **Repository** — TypeORM repository for database access (entities + query builder)
 
 ## 7. Auth Flow Summary
 - Two guard types: `AdminGuard`, `EmployeeGuard` — both check JWT + role claim
@@ -77,8 +121,8 @@ src/
 - App detects which mode: if `DATABASE_URL` exists → use it, otherwise build it from `DB_*` vars
 
 ## 9. Deployment Topology
-- Backend: Render Web Service (auto-deploy from GitHub main branch)
+- Backend: Render Web Service (auto-deploy from `backend/` folder on GitHub main branch)
 - Database: Render PostgreSQL (managed)
-- Frontend: Vercel (auto-deploy from GitHub)
-- Employee images: stored in backend `/uploads/` folder, served as static files
+- Frontend: Vercel (auto-deploy from `frontend/` folder on GitHub)
+- Employee images: stored in `backend/src/uploads/`, served as static files
 - CORS on backend restricted to the Vercel frontend origin

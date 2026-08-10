@@ -46,13 +46,14 @@ All errors return a consistent JSON body via a global NestJS exception filter:
 ## 5. Business-Rule Errors (handled in service layer, not DTO)
 - One active cycle per employee — check before insert, throw `ConflictException`
 - Completed files can't exceed target — check before increment, throw `BadRequestException`
-- Registration requires exact, case-sensitive-or-not (decide) match on `employee_code` and `is_registered = false`
+- Registration requires exact match on `employee_code` and `is_registered = false`
 
 ## 6. Frontend Handling
 - Central API client (axios/fetch wrapper) catches non-2xx responses, reads `error` code, maps to user-facing message
 - 401 → redirect to login, clear stored token
 - 403 → show "not authorized" page/toast
 - Field-level `VALIDATION_ERROR` → map `message` to the relevant form field
+- Frontend lives in `frontend/` folder, API calls go to `backend/` API
 
 ## 7. Logging
 - Server logs every 5xx with stack trace (never sent to client)
