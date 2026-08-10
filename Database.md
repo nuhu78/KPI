@@ -3,6 +3,12 @@
 ## 1. Engine
 PostgreSQL. No ORM in v1 — plain SQL via `pg` (node-postgres), with a `migrations/` folder of numbered `.sql` files run manually or via a lightweight runner (e.g. `node-pg-migrate`).
 
+### Local (pgAdmin4)
+Connect via host/port/username/password/database — no URL needed. App uses `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` env vars.
+
+### Production (Render)
+Uses `DATABASE_URL` connection string provided by Render.
+
 ## 2. ERD (textual)
 ```
 Section (1) ──< (many) Employee (1) ──< (many) Cycle
@@ -34,6 +40,7 @@ Admin (standalone, no relations)
 | id | SERIAL | PRIMARY KEY |
 | employee_code | VARCHAR(50) | UNIQUE, NOT NULL |
 | name | VARCHAR(150) | NOT NULL |
+| image_url | VARCHAR(255) | NULLABLE (profile photo path/URL) |
 | section_id | INTEGER | NOT NULL, REFERENCES sections(id) |
 | password_hash | VARCHAR(255) | NULLABLE (null until registered) |
 | is_registered | BOOLEAN | DEFAULT false |
@@ -41,6 +48,7 @@ Admin (standalone, no relations)
 
 - Admin inserts a row with `employee_code`, `name`, `section_id` and `is_registered = false`
 - On registration, `password_hash` is set and `is_registered = true`
+- `image_url` is set by admin during employee creation or updated later (stores local path or URL)
 
 ### 3.4 `cycles`
 | Column | Type | Constraints |

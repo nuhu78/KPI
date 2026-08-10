@@ -6,11 +6,15 @@ Use one prompt per phase, in order. Paste `Architecture.md`, `Database.md`, `Err
 ```
 Set up a new NestJS + TypeScript project called kpi-system. Connect it to
 PostgreSQL using plain pg (node-postgres), no ORM. Add @nestjs/config with
-validated env vars: DATABASE_URL, JWT_SECRET, JWT_EXPIRES_IN, ADMIN_SEED_ID,
-ADMIN_SEED_PASSWORD. Create a migrations/ folder with numbered .sql files for
-the schema in Database.md (admins, sections, employees, cycles tables plus
-indexes). Add a seed script that inserts the admin row from ADMIN_SEED_ID /
-ADMIN_SEED_PASSWORD (hashed with bcrypt) if it doesn't already exist.
+validated env vars. For local dev (pgAdmin4), use individual vars:
+DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE. For production
+(Render), use DATABASE_URL. The app should detect which mode: if DATABASE_URL
+exists use it, otherwise build the connection from DB_* vars. Also add
+JWT_SECRET, JWT_EXPIRES_IN, ADMIN_SEED_ID, ADMIN_SEED_PASSWORD. Create a
+migrations/ folder with numbered .sql files for the schema in Database.md
+(admins, sections, employees, cycles tables plus indexes). Add a seed script
+that inserts the admin row from ADMIN_SEED_ID / ADMIN_SEED_PASSWORD (hashed
+with bcrypt) if it doesn't already exist.
 ```
 
 ## Phase 1 — Admin Auth
@@ -27,7 +31,9 @@ Follow the error response shape and error codes in Error-Handling.md.
 Add a SectionModule with full CRUD (create, list, update, delete) restricted
 to AdminGuard, matching the sections table in Database.md. Add an
 EmployeeModule with an admin-only endpoint to create an employee record
-(employee_code, name, section_id) — is_registered defaults to false. Enforce
+(employee_code, name, section_id, image_url) — is_registered defaults to false.
+Add file upload support using multer: accept jpg/jpeg/png only, max 2MB,
+store in /uploads/ folder, save the file path to image_url column. Enforce
 unique employee_code and unique section name, returning DUPLICATE_SECTION /
 DUPLICATE_EMPLOYEE_CODE per Error-Handling.md.
 ```

@@ -37,6 +37,8 @@ All errors return a consistent JSON body via a global NestJS exception filter:
 
 ## 4. Validation Rules (DTO-level, via class-validator)
 - `employee_code`: required, string, 1–50 chars
+- `name`: required, string, 1–150 chars
+- `image_url`: optional, string, max 255 chars (file path or URL)
 - `target_files`: required, integer, min 1, max 100 (sane upper bound)
 - `password`: required, min 8 chars
 - `section name`: required, string, 1–100 chars, unique (checked in service)

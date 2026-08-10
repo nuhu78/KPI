@@ -36,13 +36,22 @@
 
 ## 9. Data Exposure
 - Public dashboard never returns: password hashes, employee_code (internal id), email/phone if added later
+- Employee images are served as static files — only store safe file types (jpg, png), validate on upload
 - Error responses never leak stack traces or internal messages to the client (see Error-Handling.md)
 
 ## 10. Transport
 - HTTPS enforced end-to-end (Render and Vercel both provide this by default) — no HTTP fallback
 
-## 11. Out of Scope (v1, revisit if the system grows)
+## 11. File Upload Security
+- Only allow safe image types: jpg, jpeg, png (validate MIME type + extension)
+- Max file size: 2MB (enforce in multer config)
+- Store uploads outside web root if possible, or in `/uploads/` with static serving
+- Never execute or serve uploaded files as scripts
+- Sanitize filenames (remove special chars, use UUID if needed)
+
+## 12. Out of Scope (v1, revisit if the system grows)
 - Refresh token rotation
 - 2FA
 - Audit logging of admin actions
 - IP allowlisting for admin panel
+- Image resizing / thumbnails

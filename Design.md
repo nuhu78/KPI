@@ -5,7 +5,7 @@
 ### 1.1 Public Dashboard (`/`)
 - Top bar: system name (left), **Login** / **Register** links (top-right)
 - Two ranking panels:
-  - **Employee Ranking** — table: rank, name, section, score %, progress bar
+  - **Employee Ranking** — table: rank, photo, name, section, score %, progress bar
   - **Section Ranking** — list: rank, section name, avg score %; each row expandable
     - Clicking a section row drops down an inline table of that section's employees ranked (same columns as employee ranking)
 - No sidebar, no auth-gated content — this page must load fast and be legible for someone just glancing at a screen/TV in an office
@@ -21,11 +21,12 @@
 
 ### 1.4 Admin Panel (`/admin/*`, behind AdminGuard)
 - `/admin/sections` — list, create, rename, delete sections
-- `/admin/employees` — list employees (with section, registration status), create new employee (code + name + section)
+- `/admin/employees` — list employees (with photo, section, registration status), create new employee (code + name + section + photo upload)
 - `/admin/cycles` — assign target/period to one employee or bulk to a section; view active cycles per employee
 - Simple left-nav: Sections | Employees | Cycles
 
 ### 1.5 Employee Panel (`/me`, behind EmployeeGuard)
+- Profile section: photo, name, section, employee code
 - Current cycle card: target files, completed, days remaining, progress bar
 - Big "Mark file complete" button (increments by 1, disabled at target)
 - History table below: past cycles (period, target, completed, final score)
@@ -43,13 +44,14 @@ Public Dashboard ──▶ Login ──▶ (role) ──▶ Admin Panel
 ```
 
 ## 4. Component List (React)
-- `RankingTable` (reused for employee ranking + section drill-down)
+- `RankingTable` (reused for employee ranking + section drill-down, includes photo column)
 - `SectionAccordion` (section list with expand/collapse)
 - `ProgressBar`
 - `LoginForm` (admin/employee tabbed)
 - `RegisterForm` (two-step: verify ID → set password)
-- `AdminSectionManager`, `AdminEmployeeManager`, `AdminCycleAssigner`
+- `AdminSectionManager`, `AdminEmployeeManager` (with photo upload), `AdminCycleAssigner`
 - `EmployeeCycleCard`, `EmployeeHistoryTable`
+- `PhotoUpload` (drag/drop or click-to-upload, preview before save)
 
 ## 5. Notes
 - Keep the public dashboard unauthenticated and cache-friendly (short polling or manual refresh is fine for v1 — no need for websockets)

@@ -21,7 +21,7 @@ Monolithic REST API (NestJS) + separate React frontend. No microservices — not
 - **AuthModule** — login (admin + employee), JWT issuing/validation, guards
 - **AdminModule** — admin-only endpoints (seeded account bootstrap)
 - **SectionModule** — CRUD for sections
-- **EmployeeModule** — admin creates employee records; employee self-registration endpoint; employee profile
+- **EmployeeModule** — admin creates employee records; employee self-registration endpoint; employee profile; image upload
 - **CycleModule** — task assignment (target + period), progress marking, cycle close-out
 - **DashboardModule** — public ranking endpoints (no auth): employee ranking, section ranking, section drill-down
 - **CommonModule** — shared: exception filters, DTOs, pipes, guards
@@ -70,11 +70,15 @@ src/
 - JWT payload: `{ sub, role: 'admin' | 'employee', iat, exp }`
 
 ## 8. Environment Config
-- `.env` holds: `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `ADMIN_SEED_ID`, `ADMIN_SEED_PASSWORD`
+- **Local (pgAdmin4):** individual vars — `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`
+- **Production (Render):** single `DATABASE_URL` connection string
+- **Common:** `JWT_SECRET`, `JWT_EXPIRES_IN`, `ADMIN_SEED_ID`, `ADMIN_SEED_PASSWORD`
 - Loaded via `@nestjs/config`, validated on startup (fail fast if missing)
+- App detects which mode: if `DATABASE_URL` exists → use it, otherwise build it from `DB_*` vars
 
 ## 9. Deployment Topology
 - Backend: Render Web Service (auto-deploy from GitHub main branch)
 - Database: Render PostgreSQL (managed)
 - Frontend: Vercel (auto-deploy from GitHub)
+- Employee images: stored in backend `/uploads/` folder, served as static files
 - CORS on backend restricted to the Vercel frontend origin

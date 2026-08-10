@@ -15,6 +15,7 @@ Don't paste entire docs every time. Feed only what the current phase needs.
 ### Phase 0 — Setup
 - `Database.md` (full — needed for schema + migration SQL)
 - `AGENTS.md` section "Architecture Facts That Matter" + "Env Vars Required"
+- Note: local dev uses `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE` (pgAdmin4 style). `DATABASE_URL` only for Render deploy.
 - Prompt from `Prompts.md` Phase 0
 
 ### Phase 1 — Admin Auth
@@ -23,8 +24,9 @@ Don't paste entire docs every time. Feed only what the current phase needs.
 - Prompt from `Prompts.md` Phase 1
 
 ### Phase 2 — Section & Employee Management
-- `Database.md` sections 3.2 + 3.3 (sections + employees table schemas)
+- `Database.md` sections 3.2 + 3.3 (sections + employees table schemas — includes `image_url`)
 - `Error-Handling.md` section 3 (rows for DUPLICATE_SECTION, DUPLICATE_EMPLOYEE_CODE, SECTION_NOT_FOUND)
+- `Security.md` section 11 (file upload security — multer config, allowed types, max size)
 - Prompt from `Prompts.md` Phase 2
 
 ### Phase 3 — Employee Registration & Login
@@ -83,6 +85,9 @@ Continuing KPI system build. Phases [X] complete. Starting Phase [Y].
 
 [Only the doc sections listed above for Phase Y]
 
+DB config: local dev uses pgAdmin4 style (DB_HOST, DB_PORT, DB_USERNAME,
+DB_PASSWORD, DB_DATABASE). Production uses DATABASE_URL on Render.
+Employee images: stored in backend /uploads/, served as static files.
 Current repo state: [brief — e.g. "NestJS + React deployed, DB migrated, auth working"]
 ```
 
@@ -104,6 +109,8 @@ Current repo state: [brief — e.g. "NestJS + React deployed, DB migrated, auth 
 
 Each prompt itself is ~100–200 tokens. Output varies by complexity but averages ~2–4k tokens per phase.
 
+**Note:** Phase 2 includes image upload (multer + validation) which adds ~200 tokens to the prompt.
+
 ---
 
 ## Quick Reference: Which Doc Covers What
@@ -121,10 +128,12 @@ Each prompt itself is ~100–200 tokens. Output varies by complexity but average
 | SQL injection rules | `Security.md` | 5 |
 | Rate limiting | `Security.md` | 6 |
 | CORS config | `Security.md` | 7 |
+| File upload security | `Security.md` | 11 |
 | UI pages | `Design.md` | 1 |
 | React components | `Design.md` | 4 |
 | Module structure | `Architecture.md` | 3–4 |
-| Env vars | `AGENTS.md` | Env Vars Required |
+| Env vars (local) | `AGENTS.md` | DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, DB_DATABASE |
+| Env vars (production) | `AGENTS.md` | DATABASE_URL |
 
 ---
 
@@ -135,3 +144,4 @@ Each prompt itself is ~100–200 tokens. Output varies by complexity but average
 - Asking "how should I structure this?" when `Architecture.md` already answers it
 - Pasting `Prompts.md` and `AGENTS.md` together — redundant
 - Re-stating constraints already in the doc (e.g. "use raw pg, no ORM" — the AI reads this from the repo)
+- Forgetting to mention image upload security rules when implementing employee photo features
