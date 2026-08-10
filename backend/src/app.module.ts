@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validate } from './config/env.validation';
+import { AuthModule } from './auth/auth.module';
 import { Admin } from './entities/admin.entity';
 import { Cycle } from './entities/cycle.entity';
 import { Employee } from './entities/employee.entity';
@@ -44,6 +45,7 @@ import { AdminSeeder } from './seeds/admin.seeder';
       },
     }),
     TypeOrmModule.forFeature([Admin]),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, AdminSeeder],
