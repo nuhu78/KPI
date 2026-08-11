@@ -5,10 +5,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validate } from './config/env.validation';
 import { AuthModule } from './auth/auth.module';
+import { EmployeeModule } from './employee/employee.module';
 import { Admin } from './entities/admin.entity';
 import { Cycle } from './entities/cycle.entity';
 import { Employee } from './entities/employee.entity';
 import { Section } from './entities/section.entity';
+import { SectionModule } from './section/section.module';
 import { AdminSeeder } from './seeds/admin.seeder';
 
 @Module({
@@ -46,6 +48,8 @@ import { AdminSeeder } from './seeds/admin.seeder';
     }),
     TypeOrmModule.forFeature([Admin]),
     AuthModule,
+    SectionModule,
+    EmployeeModule,
   ],
   controllers: [AppController],
   providers: [AppService, AdminSeeder],
