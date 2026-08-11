@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { validate } from './config/env.validation';
 import { AuthModule } from './auth/auth.module';
+import { CycleModule } from './cycle/cycle.module';
 import { EmployeeModule } from './employee/employee.module';
 import { Admin } from './entities/admin.entity';
 import { Cycle } from './entities/cycle.entity';
@@ -50,6 +51,7 @@ import { AdminSeeder } from './seeds/admin.seeder';
     AuthModule,
     SectionModule,
     EmployeeModule,
+    CycleModule,
   ],
   controllers: [AppController],
   providers: [AppService, AdminSeeder],
