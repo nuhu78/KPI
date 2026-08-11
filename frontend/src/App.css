@@ -8,3 +8,14 @@
 .home h1 {
   font-size: 3rem;
 }
+
+.home-nav {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.home-nav a {
+  color: var(--accent);
+  font-size: 18px;
+}
