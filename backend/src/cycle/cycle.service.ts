@@ -41,6 +41,16 @@ export class CycleService {
     );
   }
 
+  findAll(): Promise<Cycle[]> {
+    return this.cycleRepository
+      .createQueryBuilder('c')
+      .innerJoinAndSelect('c.employee', 'e')
+      .innerJoinAndSelect('e.section', 's')
+      .orderBy('c.status', 'ASC')
+      .addOrderBy('c.created_at', 'DESC')
+      .getMany();
+  }
+
   async createBulk(
     dto: CreateBulkCycleDto,
   ): Promise<{ message: string; assigned: number; skipped: number }> {
@@ -116,6 +126,37 @@ export class CycleService {
     }
 
     cycle.completed_files += 1;
+    return this.cycleRepository.save(cycle);
+  }
+
+  async undoProgress(cycleId: number, employeeId: number): Promise<Cycle> {
+    const cycle = await this.cycleRepository.findOneBy({ id: cycleId });
+    if (!cycle) {
+      throw new NotFoundException('Cycle not found');
+    }
+
+    if (cycle.employee_id !== employeeId) {
+      throw new ForbiddenException({
+        error: 'FORBIDDEN',
+        message: 'You can only update your own cycle',
+      });
+    }
+
+    if (cycle.status !== 'active') {
+      throw new BadRequestException({
+        error: 'CYCLE_NOT_ACTIVE',
+        message: 'This cycle is not active',
+      });
+    }
+
+    if (cycle.completed_files <= 0) {
+      throw new BadRequestException({
+        error: 'VALIDATION_ERROR',
+        message: 'No completed files to undo',
+      });
+    }
+
+    cycle.completed_files -= 1;
     return this.cycleRepository.save(cycle);
   }
 

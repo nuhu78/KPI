@@ -95,7 +95,22 @@
 }
 
 .auth-alt a {
-  color: var(--accent);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.auth-back {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 16px;
+  color: var(--text);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.auth-back:hover {
+  color: var(--primary);
 }
 
 .auth-verified {

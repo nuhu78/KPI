@@ -1,8 +1,11 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import './App.css'
 import { AuthProvider } from './auth/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
-import AdminHome from './pages/AdminHome'
+import AdminCycleAssigner from './components/AdminCycleAssigner'
+import AdminEmployeeManager from './components/AdminEmployeeManager'
+import AdminSectionManager from './components/AdminSectionManager'
+import AdminLayout from './pages/AdminLayout'
 import EmployeeHome from './pages/EmployeeHome'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
@@ -20,10 +23,15 @@ export default function App() {
             path="/admin"
             element={
               <ProtectedRoute role="admin">
-                <AdminHome />
+                <AdminLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<Navigate to="/admin/sections" replace />} />
+            <Route path="sections" element={<AdminSectionManager />} />
+            <Route path="employees" element={<AdminEmployeeManager />} />
+            <Route path="cycles" element={<AdminCycleAssigner />} />
+          </Route>
           <Route
             path="/me"
             element={

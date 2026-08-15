@@ -88,6 +88,9 @@ export default function LoginPage() {
         <p className="auth-alt">
           New employee? <Link to="/register">Register here</Link>
         </p>
+        <Link to="/" className="auth-back">
+          &larr; Back to home
+        </Link>
       </form>
     </main>
   )

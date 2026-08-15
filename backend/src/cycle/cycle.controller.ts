@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
@@ -29,6 +30,12 @@ export class CycleController {
   constructor(private readonly cycleService: CycleService) {}
 
   @UseGuards(AdminGuard)
+  @Get()
+  findAll() {
+    return this.cycleService.findAll();
+  }
+
+  @UseGuards(AdminGuard)
   @Post()
   create(@Body() dto: CreateCycleDto) {
     return this.cycleService.create(dto);
@@ -47,5 +54,14 @@ export class CycleController {
     @CurrentUser() user: JwtPayload,
   ) {
     return this.cycleService.updateProgress(id, user.sub);
+  }
+
+  @UseGuards(EmployeeGuard)
+  @Patch(':id/progress/undo')
+  undoProgress(
+    @Param('id', cycleIdPipe) id: number,
+    @CurrentUser() user: JwtPayload,
+  ) {
+    return this.cycleService.undoProgress(id, user.sub);
   }
 }
